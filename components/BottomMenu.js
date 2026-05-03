@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Modal, ScrollView, Image, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, ScrollView, Image, StyleSheet, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const DEFAULT_AVATAR = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
@@ -11,7 +11,8 @@ export default function BottomMenu({
   myRank, foundCachesCount, progressPercent,
   leaderboard,
   treasureImage, isUploading,
-  pickImage, handleHideTreasure
+  pickImage, handleHideTreasure,
+  treasureComment, setTreasureComment
 }) {
   return (
     <Modal visible={menuVisible} animationType="slide" transparent={true}>
@@ -28,6 +29,7 @@ export default function BottomMenu({
                 <TouchableOpacity onPress={pickImage} style={styles.imagePickerBig}>
                   {treasureImage ? <Image source={{uri: treasureImage}} style={styles.fullImg}/> : <Ionicons name="camera" size={40} color="#bdc3c7"/>}
                 </TouchableOpacity>
+                <TextInput style={styles.commentInput} placeholder="Остави подсказка" placeholderTextColor="#999" value={treasureComment} onChangeText={setTreasureComment} maxLength={60}/>
                 <TouchableOpacity style={styles.hideBtn} onPress={handleHideTreasure} disabled={isUploading}>
                   <Text style={styles.buttonText}>{isUploading ? "Качва се..." : "СКРИЙ ТУК"}</Text>
                 </TouchableOpacity>
@@ -106,4 +108,5 @@ const styles = StyleSheet.create({
   smallAvatar: { width: 40, height: 40, borderRadius: 20, marginRight: 15 },
   playerName: { flex: 1, fontSize: 16, fontWeight: 'bold', color: '#2c3e50' },
   playerScore: { fontSize: 16, fontWeight: 'bold', color: '#2ecc71' },
+  commentInput: { width: '100%', backgroundColor: '#f5f6fa', padding: 15, borderRadius: 15, marginBottom: 20, fontSize: 16, color: '#2c3e50' },
 });

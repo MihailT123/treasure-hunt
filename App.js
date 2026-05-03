@@ -21,7 +21,7 @@ const DEFAULT_AVATAR = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
 export default function App() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); 
   const [username, setUsername] = useState('');
   const [profileImage, setProfileImage] = useState(null);
   const [imagePickerVisible, setImagePickerVisible] = useState(false);
@@ -45,6 +45,7 @@ export default function App() {
   const [inputCode, setInputCode] = useState('');
   const [selectedCache, setSelectedCache] = useState(null);
   const [treasureImage, setTreasureImage] = useState(null);
+  const [treasureComment, setTreasureComment] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const mapRef = useRef(null);
 
@@ -201,6 +202,7 @@ export default function App() {
         creator: user.email,
         creatorUsername: username,
         imageUrl: treasureImage,
+        comment: treasureComment,
         finders: [],
         foundDates: {}, 
         createdAt: serverTimestamp()
@@ -323,6 +325,7 @@ export default function App() {
         leaderboard={leaderboard}
         treasureImage={treasureImage} isUploading={isUploading}
         pickImage={pickImage} handleHideTreasure={handleHideTreasure}
+        treasureComment={treasureComment} setTreasureComment={setTreasureComment}
       />
 
       <UnlockModal 

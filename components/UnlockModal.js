@@ -8,6 +8,7 @@ export default function UnlockModal({ visible, setVisible, selectedCache, inputC
         <View style={styles.unlockContent}>
           <Text style={styles.unlockTitle}>Въведи Кода</Text>
           {selectedCache?.imageUrl && <Image source={{uri: selectedCache.imageUrl}} style={styles.hintImage} />}
+          {selectedCache?.comment ? <Text style={styles.hintText}>"{selectedCache.comment}"</Text> : null}
           <TextInput 
             style={styles.unlockInput} 
             placeholder="6-цифрен код" 
@@ -35,4 +36,5 @@ const styles = StyleSheet.create({
   unlockBtn: { backgroundColor: '#2ecc71', padding: 15, width: '100%', borderRadius: 10, alignItems: 'center' },
   buttonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
   hintImage: { width: '100%', height: 150, borderRadius: 10, marginBottom: 15 },
+  hintText: { fontSize: 16, fontStyle: 'italic', color: '#7f8c8d', marginBottom: 15, textAlign: 'center' },
 });
