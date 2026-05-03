@@ -154,14 +154,14 @@ export default function App() {
 
   const handleCamera = async () => {
     setImagePickerVisible(false);
-    let r = await ImagePicker.launchCameraAsync({ allowsEditing: true, quality: 0.5 });
-    if (!r.canceled) setTreasureImage(r.assets[0].uri);
+    let r = await ImagePicker.launchCameraAsync({ allowsEditing: true, quality: 0.2, base64: true });
+    if (!r.canceled) setTreasureImage('data:image/jpeg;base64,' + r.assets[0].base64);
   };
 
   const handleGallery = async () => {
     setImagePickerVisible(false);
-    let r = await ImagePicker.launchImageLibraryAsync({ allowsEditing: true, quality: 0.5 });
-    if (!r.canceled) setTreasureImage(r.assets[0].uri);
+    let r = await ImagePicker.launchImageLibraryAsync({ allowsEditing: true, quality: 0.2, base64: true });
+    if (!r.canceled) setTreasureImage('data:image/jpeg;base64,' + r.assets[0].base64);
   };
 
   const handleMarkerPress = (cache) => {
