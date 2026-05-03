@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity, Alert, ActivityIndicator, Ima
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
+import * as ScreenOrientation from 'expo-screen-orientation';
 import { Ionicons } from '@expo/vector-icons';
 import { getDistance } from 'geolib';
 import { db, auth } from './firebaseConfig';
@@ -14,6 +15,7 @@ import AuthScreen from './screens/AuthScreen';
 import FloatingParticle from './components/FloatingParticle';
 import UnlockModal from './components/UnlockModal';
 import BottomMenu from './components/BottomMenu';
+import ImagePickerModal from './components/ImagePickerModal';
 
 const DEFAULT_AVATAR = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
@@ -22,8 +24,10 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState('');
   const [profileImage, setProfileImage] = useState(null);
+  const [imagePickerVisible, setImagePickerVisible] = useState(false);
 
   const [location, setLocation] = useState(null);
+  const [isTracking, setIsTracking] = useState(true);
   const [caches, setCaches] = useState([]);
   const [leaderboard, setLeaderboard] = useState([]); 
   const [score, setScore] = useState(0);
@@ -109,6 +113,22 @@ export default function App() {
     }
   }, [location, selectedCache, isInRange]);
 
+  useEffect(() => {
+    const lockScreen = async () => {
+      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+    };
+    lockScreen();
+  }, []);
+
+  useEffect(() => {
+    if (isTracking && location && mapRef.current) {
+      mapRef.current.animateCamera({
+        center: { latitude: location.latitude, longitude: location.longitude },
+        heading: location.heading || 0, 
+      }, { duration: 1000 });
+    }
+  }, [location, isTracking]);
+
   const startPointBleed = () => {
     setCurrentCacheScore(50);
     clearInterval(timerRef.current); 
@@ -127,13 +147,20 @@ export default function App() {
     Animated.timing(slideAnim, { toValue: 200, duration: 500, useNativeDriver: true }).start();
   };
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 0.5,
-    });
-    if (!result.canceled) setTreasureImage(result.assets[0].uri);
+  const pickImage = () => {
+    setImagePickerVisible(true);
+  };
+
+  const handleCamera = async () => {
+    setImagePickerVisible(false);
+    let r = await ImagePicker.launchCameraAsync({ allowsEditing: true, quality: 0.5 });
+    if (!r.canceled) setTreasureImage(r.assets[0].uri);
+  };
+
+  const handleGallery = async () => {
+    setImagePickerVisible(false);
+    let r = await ImagePicker.launchImageLibraryAsync({ allowsEditing: true, quality: 0.5 });
+    if (!r.canceled) setTreasureImage(r.assets[0].uri);
   };
 
   const handleMarkerPress = (cache) => {
@@ -210,13 +237,13 @@ export default function App() {
   };
 
   const centerMap = () => {
+    setIsTracking(true); 
     if (location && mapRef.current) {
-      mapRef.current.animateToRegion({
-        latitude: location.latitude,
-        longitude: location.longitude,
-        latitudeDelta: 0.005,
-        longitudeDelta: 0.005,
-      }, 1000);
+      mapRef.current.animateCamera({
+        center: { latitude: location.latitude, longitude: location.longitude },
+        heading: location.heading || 0,
+        zoom: 18
+      }, { duration: 1000 });
     }
   };
 
@@ -238,7 +265,8 @@ export default function App() {
         showsUserLocation={true}
         showsMyLocationButton={false} 
         showsCompass={false}          
-        toolbarEnabled={false}        
+        toolbarEnabled={false}
+        onPanDrag={() => setIsTracking(false)}        
       >
        {caches.map(c => {
          let pinIcon = c.creator === user.email ? require('./yourTreasure.png') 
@@ -302,6 +330,13 @@ export default function App() {
         selectedCache={selectedCache}
         inputCode={inputCode} setInputCode={setInputCode}
         claimTreasure={claimTreasure}
+      />
+
+      <ImagePickerModal 
+        visible={imagePickerVisible} 
+        setVisible={setImagePickerVisible}
+        onPickCamera={handleCamera}
+        onPickGallery={handleGallery}
       />
     </View>
   );

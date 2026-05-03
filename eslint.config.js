@@ -7,7 +7,7 @@ module.exports = defineConfig([
   {
     ignores: ["dist/*"],
     rules: {
-      "no-unused-vars": "off", // Изключва правилото напълно
+      "no-unused-vars": "off",
     },
   },
 ]);

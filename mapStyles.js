@@ -1,5 +1,3 @@
-// mapStyles.js
-
 export const dayStyle = [
     {
         "elementType": "labels",

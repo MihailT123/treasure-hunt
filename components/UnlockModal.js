@@ -6,7 +6,7 @@ export default function UnlockModal({ visible, setVisible, selectedCache, inputC
     <Modal visible={visible} transparent={true} animationType="fade">
       <View style={styles.unlockModal}>
         <View style={styles.unlockContent}>
-          <Text style={styles.unlockTitle}>Въведи Кода 🏺</Text>
+          <Text style={styles.unlockTitle}>Въведи Кода</Text>
           {selectedCache?.imageUrl && <Image source={{uri: selectedCache.imageUrl}} style={styles.hintImage} />}
           <TextInput 
             style={styles.unlockInput} 

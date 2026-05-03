@@ -4,6 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from '../firebaseConfig';
+import ImagePickerModal from '../components/ImagePickerModal';
 
 const DEFAULT_AVATAR = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
@@ -14,14 +15,22 @@ export default function AuthScreen() {
   const [username, setUsername] = useState('');
   const [profileImage, setProfileImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [imagePickerVisible, setImagePickerVisible] = useState(false);
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 0.5,
-    });
-    if (!result.canceled) setProfileImage(result.assets[0].uri);
+  const pickImage = () => {
+    setImagePickerVisible(true);
+  };
+
+  const handleCamera = async () => {
+    setImagePickerVisible(false);
+    let r = await ImagePicker.launchCameraAsync({ allowsEditing: true, quality: 0.5 });
+    if (!r.canceled) setProfileImage(r.assets[0].uri);
+  };
+
+  const handleGallery = async () => {
+    setImagePickerVisible(false);
+    let r = await ImagePicker.launchImageLibraryAsync({ allowsEditing: true, quality: 0.5 });
+    if (!r.canceled) setProfileImage(r.assets[0].uri);
   };
 
   const handleAuth = async () => {
@@ -81,6 +90,13 @@ export default function AuthScreen() {
           </Text>
         </TouchableOpacity>
       </View>
+      
+      <ImagePickerModal 
+        visible={imagePickerVisible} 
+        setVisible={setImagePickerVisible}
+        onPickCamera={handleCamera}
+        onPickGallery={handleGallery}
+      />
     </ImageBackground>
   );
 }
