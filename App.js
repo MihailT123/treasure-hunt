@@ -83,7 +83,7 @@ export default function App() {
     let locationSub = null;
     const startTracking = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') return Alert.alert("L ❌", "Брат, без локация няма как да играеш! Отиди в настройките на телефона и я пусни.");
+      if (status !== 'granted') return Alert.alert("Внимание!", "Без достъп до локацията няма как да играеш! Отидини в настройките и дай разрешение.");
       locationSub = await Location.watchPositionAsync(
         { accuracy: Location.Accuracy.High, distanceInterval: 1 },
         (loc) => setLocation(loc.coords)
@@ -110,7 +110,7 @@ export default function App() {
     if (dist > 15 && isInRange) {
       stopPointBleed();
       setSelectedCache(null);
-      Alert.alert("Skill issue 🏃", "Излезе от радиуса. Трябва да цъкнеш съкровището пак!");
+      Alert.alert("Излезе от радиуса. Трябва да цъкнеш съкровището пак!");
     }
   }, [location, selectedCache, isInRange]);
 
@@ -230,12 +230,12 @@ export default function App() {
         await setDoc(userRef, { totalScore: score + currentCacheScore }, { merge: true });
         
         setScore(s => s + currentCacheScore);
-        Alert.alert("Bravo! 🎉", `Взе ${currentCacheScore} точки!`);
+        Alert.alert("Браво!", `Взе ${currentCacheScore} точки!`);
         setFoundModalVisible(false);
         setInputCode('');
         setSelectedCache(null); 
-      } catch(e) { Alert.alert("Грешка при запис ❌"); }
-    } else { Alert.alert("L ❌", "Грешен код!"); }
+      } catch(e) { Alert.alert("Грешка при запис."); }
+    } else { Alert.alert("Внимание!", "Грешен код!"); }
   };
 
   const centerMap = () => {
