@@ -57,7 +57,11 @@ const handleCamera = async () => {
         });
       }
     } catch (e) {
-      Alert.alert("Невалиден email или парола!", "Моля опитайте пак.");
+      if (authScreen === 'login') {
+        Alert.alert("Грешка!", "Невалиден email или парола!");
+      } else {
+        Alert.alert("Грешка при регистрация!", "Може би този имейл вече се използва.");
+      }
     } finally { setLoading(false); }
   };
 
