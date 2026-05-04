@@ -8,7 +8,7 @@ import { getAuth } from "firebase/auth";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBCQsYTeKoMXdVUvvKroQJKArYSfhQN-HE",
+  apiKey: "redacted",
   authDomain: "treasure-findr.firebaseapp.com",
   projectId: "treasure-findr",
   storageBucket: "treasure-findr.firebasestorage.app",
